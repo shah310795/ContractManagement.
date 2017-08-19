@@ -1,4 +1,4 @@
-package com.project.Dao;
+package com.project.Model;
 
 import com.project.data.Contract;
 import com.project.data.ContractLog;

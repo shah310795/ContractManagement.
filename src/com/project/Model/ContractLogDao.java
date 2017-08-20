@@ -4,9 +4,8 @@ import com.project.data.Contract;
 import com.project.data.ContractLog;
 
 public interface ContractLogDao {
-	
 	boolean insertContractLog (ContractLog contract);
-	Contract selectFinalContract(int contract_id);
+	Contract selectContract(int contract_id);
+	boolean finalizeContract(int contract_id);
 	
-
 }

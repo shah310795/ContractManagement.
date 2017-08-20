@@ -12,6 +12,10 @@ public class Contract {
 	float price;
 	String period_of_delivery;
 	String invoice_date;
+	
+	public Contract() {
+		
+	}
 	public int getContract_id() {
 		return contract_id;
 	}

@@ -395,12 +395,13 @@
                         <td id="module_section_td2"><div id="module_section_div2">{{myAddress}}</div></td>
                     </tr>
                     </table>
+                    </div>
             <div class="panel panel-default">
                 <div class="panel-heading" id="module_section_div1" style="margin-top: 10px;">
                     Feature Details
                 </div>
             </div>
-            <div id="container" ng-controller="feaureController">
+            <div id="container" ng-controller="viewController">
             <table class="table table-hover" style="width: 100%; float: center; border: 1px solid #cccccc;">
             <thead>
                  <tr>
@@ -415,18 +416,19 @@
             <div id="container" ng-repeat="feature in features">
             <tbody>
                 <tr>
-                    <td>1</td>
-                    <td>Primary Features</td>
-                    <td>Sub?</td>
-                    <td>Feature Name</td>
-                    <td>Feature Description</td>
-                    <td>Specifications</td>
+                    <td>$index</td>
+                    <td>{{feature.primary}}</td>
+                    <td>{{feature.featureName}}</td>
+                    <td>{{feature.sub}}</td>
+                    <td>{{feature.description}}</td>
+                    <td>{{feature.specification}}</td>
                 </tr>
             </tbody>
             </div>
             </table>
             </div>
             <table> 
+                <div class="container" ng-controller="viewController">
                     <thead>
                         <tr>
                             <td style="width: 180px; float: right;"></td>
@@ -435,16 +437,17 @@
                     </thead>
                      <tr id="module_section_tr">
                         <td id="module_section_td1">
-                            <div style="border: 1px solid #cccccd;height: 42px;padding: 10px 35px; width: 200px; border-radius: 3px;background-color: #cccccc;font-weight: bold;font-size: 16px;" >Payment Terms </div>
+                            <div style="border: 1px solid #cccccd;height: 42px;padding: 10px 35px; width: 200px; border-radius: 3px;background-color: #cccccc;font-weight: bold;font-size: 16px;">Payment Terms </div>
                         </td>
-                        <td id="module_section_td2"><div id="module_section_div2" style="overflow-y: hidden;">***</div></td>
+                        <td id="module_section_td2"><div id="module_section_div2" style="overflow-y: hidden;">{{paymentTerms}}</div></td>
                     </tr>
                     <tr id="module_section_tr">
                         <td id="module_section_td1">
-                            <div style="border: 1px solid #cccccd;height: 42px;padding: 10px 42px; width: 200px; border-radius: 3px;background-color: #cccccc;font-weight: bold;font-size: 16px;" >Delivery Terms</div>
+                            <div style="border: 1px solid #cccccd;height: 42px;padding: 10px 42px; width: 200px; border-radius: 3px;background-color: #cccccc;font-weight: bold;font-size: 16px;">Delivery Terms</div>
                         </td>
-                        <td id="module_section_td2"><div id="module_section_div2" style="overflow-y: hidden;">***</div></td>
+                        <td id="module_section_td2"><div id="module_section_div2" style="overflow-y: hidden;">{{deliveryTerms}}</div></td>
                     </tr>
+                    </div>
                     </table>
             <div class="panel panel-default">
                 <div class="panel-heading" id="module_section_div1" style="margin-top: 10px;">
@@ -486,33 +489,9 @@
     <script>
         var app = angular.module("myApp1", []);
 
-		app.factory('PaymentDataBrowser', function($http){
-            var data = ["myPaymentTerms","myDeliveryTerms","totalAmount","totalTax", "totalDiscount"];
-            /*$http.get('URL').then(function(response){
-                data = response;
-            });*/
-            return {
-                getData: function() {
-                    return data;
-                }
-            };
-        });	
-			
-        app.factory('ViewDataBrowser', function($http){
-            var data = ["myProposal","myDescription","sellerDetails","address"];
-            /*$http.get('URL').then(function(response){
-                data = response;
-            });*/
-            return {
-                getData: function() {
-                    return data;
-                }
-            };
-        }) ;
-
-        app.factory('FeatureDataBrowser' /*or whatever*/, function($http) {
-            var data = {};
-            $http.get('URL').then(function(response) {
+        /*app.factory('PaymentDataBrowser', function($http){
+        var data = ["myPaymentTerms","myDeliveryTerms","totalAmount","totalTax", "totalDiscount"];
+            $http.get('URL').then(function(response){
                 data = response;
             });
             return {
@@ -521,31 +500,70 @@
                 }
             };
         });
+            
+        app.factory('ViewDataBrowser', function($http){
+            var data = ["myProposal","myDescription","sellerDetails","address"];
+            /*$http.get('URL').then(function(response){
+                data = response;
+            });
+            return {
+                getData: function() {
+                    return data;
+                }
+            };
+        }) ;
+
+        app.factory('FeatureDataBrowser' /*or whatever, function($http) {
+            var data = {};
+            $http.get('http://192.168.4.133:8080/ContractManagement2/webapi/proposals').then(function(response) {
+                data = response;
+            });
+            return {
+                getData: function() {
+                    return data;
+                }
+            };
+        });*/
+
+        app.factory('ViewDataBrowser', function($http){
+            var data = {};
+            $http.get('http://192.168.4.135:8080/ContractManagement2/webapi/proposals').then(function(response){
+                console.log(response);
+                data = JSON.parse(response);
+            });
+            return {
+                getData: function() {
+                    return data;
+                }
+            };
+        }) ;
 
         app.controller("viewController", function($scope, ViewDataBrowser) {
-		var tempData = ViewDataBrowser.getData();
-        $scope.myProposal = tempData[0];
-        $scope.myDescription = tempData[1];
-        $scope.mySellerDetails = tempData[2];
-        $scope.myAddress = "Address of the Seller";
-        $scope.myPaymentDetails = "Unless other terms are in place, Buyer agrees to make payment within 45 days of delivery of Item(s) to Buyer provided the Item(s) is not rejected by Buyer.";
+            var tempData = ViewDataBrowser.getData();
+            $scope.myProposal = tempData.proposal;
+            $scope.myDescription = tempData.description;
+            $scope.mySellerDetails = tempData.sellerDetails;
+            $scope.myAddress = tempData.address;
+            $scope.deliveryTerms = tempData.deliveryTerms;
+            $scope.paymentTerms = tempData.paymentTerms;
+            $scope.features = tempData.features;
         });
 
-        app.controller("featureController", function($scope, FeatureDataBrowser){
+        /*app.controller("featureController", function($scope, FeatureDataBrowser){
             //Get an array of rows
             //Set a variable in scope equal to that array
             //Use that variable in ng-repeat
             $scope.features = FeatureDataBrowser.getData();
         });
-		
-		app.controller("paymentController", function($scope, PaymentDataBrowser){
-			var tempPayment = PaymentDataBrowser.getData();
-			$scope.paymentTerms = tempPayment[0];
-			$scope.deliveryTerms = tempPayment[1];
-			$scope.totalAmountToBePaid = tempPayment[2];
-			$scope.taxDetails = tempPayment[3];
-			$scope.discountDetails = tempPayment[4];
-		}); 
+        
+        app.controller("paymentController", function($scope, PaymentDataBrowser){
+            var tempPayment = PaymentDataBrowser.getData();
+            $scope.paymentTerms = tempPayment[0];
+            $scope.deliveryTerms = tempPayment[1];
+            $scope.totalAmountToBePaid = tempPayment[2];
+            $scope.taxDetails = tempPayment[3];
+            $scope.discountDetails = tempPayment[4];
+        }); */
     </script>
 
 

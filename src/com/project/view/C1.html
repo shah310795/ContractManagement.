@@ -486,11 +486,23 @@
     <script>
         var app = angular.module("myApp1", []);
 
-        app.factory('ViewDataBrowser', function($http){
-            var data = {};
-            $http.get('URL').then(function(response){
+		app.factory('PaymentDataBrowser', function($http){
+            var data = ["myPaymentTerms","myDeliveryTerms","totalAmount","totalTax", "totalDiscount"];
+            /*$http.get('URL').then(function(response){
                 data = response;
-            });
+            });*/
+            return {
+                getData: function() {
+                    return data;
+                }
+            };
+        });	
+			
+        app.factory('ViewDataBrowser', function($http){
+            var data = ["myProposal","myDescription","sellerDetails","address"];
+            /*$http.get('URL').then(function(response){
+                data = response;
+            });*/
             return {
                 getData: function() {
                     return data;
@@ -511,11 +523,12 @@
         });
 
         app.controller("viewController", function($scope, ViewDataBrowser) {
-        $scope.myProposal = ViewDataBrowser.getData();
-        $scope.myDescription = ViewDataBrowser.getData();
-        $scope.mySellerDetails = ViewDataBrowser.getData();
+		var tempData = ViewDataBrowser.getData();
+        $scope.myProposal = tempData[0];
+        $scope.myDescription = tempData[1];
+        $scope.mySellerDetails = tempData[2];
         $scope.myAddress = "Address of the Seller";
-        $scope.myPaymentDetails = "Unless other terms are in place, Buyer agrees to make payment within 45 days of delivery of Item(s) to Buyer provided the Item(s) is not rejected by Buyer."+;
+        $scope.myPaymentDetails = "Unless other terms are in place, Buyer agrees to make payment within 45 days of delivery of Item(s) to Buyer provided the Item(s) is not rejected by Buyer.";
         });
 
         app.controller("featureController", function($scope, FeatureDataBrowser){
@@ -524,6 +537,15 @@
             //Use that variable in ng-repeat
             $scope.features = FeatureDataBrowser.getData();
         });
+		
+		app.controller("paymentController", function($scope, PaymentDataBrowser){
+			var tempPayment = PaymentDataBrowser.getData();
+			$scope.paymentTerms = tempPayment[0];
+			$scope.deliveryTerms = tempPayment[1];
+			$scope.totalAmountToBePaid = tempPayment[2];
+			$scope.taxDetails = tempPayment[3];
+			$scope.discountDetails = tempPayment[4];
+		}); 
     </script>
 
 
